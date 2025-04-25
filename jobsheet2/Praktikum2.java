@@ -1,30 +1,45 @@
+package jobsheet2;
 import javax.swing.*;
 
-public class Praktikum1 extends JFrame {
+
+public class Praktikum2 extends JFrame {
     private JTextPane txtPane;
     private JButton btBaca;
+    private JButton btSimpan;
     private JFileChooser loadFile;
-    private Praktikum1Controller controller;
+    private Praktikum2Controller controller;
 
-    public Praktikum1() {
-        setTitle("Praktikum 1");
+    public Praktikum2() {
+        setTitle("Praktikum 2");
         setSize(500, 350);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         // Inisialisasi Controller
-        controller = new Praktikum1Controller(this);
+        controller = new Praktikum2Controller(this);
 
+        // Panel utama
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        JLabel titleLabel = new JLabel("Praktikum 1", JLabel.CENTER);
+
+        // Label Judul
+        JLabel titleLabel = new JLabel("Praktikum 2", JLabel.CENTER);
         panel.add(titleLabel);
+
+        // Text Pane untuk menampilkan isi file
         txtPane = new JTextPane();
-        txtPane.setEditable(false);
+        txtPane.setEditable(true);
         panel.add(new JScrollPane(txtPane));
+
+        // JFileChooser untuk memilih file
         loadFile = new JFileChooser();
+
+        // Tombol untuk membaca file&simpan
         btBaca = new JButton("Baca File");
         panel.add(btBaca);
+
+        btSimpan = new JButton("Simpan");
+        panel.add(btSimpan);
 
         add(panel);
 
@@ -37,6 +52,10 @@ public class Praktikum1 extends JFrame {
         return btBaca;
     }
 
+    public JButton getBtSimpan() {
+        return btSimpan;
+    }
+
     public JFileChooser getLoadFile() {
         return loadFile;
     }
@@ -47,7 +66,7 @@ public class Praktikum1 extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new Praktikum1().setVisible(true);
+            new Praktikum2().setVisible(true);
         });
     }
 }

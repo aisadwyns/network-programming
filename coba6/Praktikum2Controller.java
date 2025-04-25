@@ -1,3 +1,4 @@
+package coba6;
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.event.ActionEvent;
@@ -37,34 +38,57 @@ public class Praktikum2Controller {
     private void proses() {
         JFileChooser loadFile = view.getLoadFile();
         StyledDocument doc = view.getTxtPane().getStyledDocument();
-
+    
         if (JFileChooser.APPROVE_OPTION == loadFile.showOpenDialog(view)) {
-            InputStream inputStream = null;
+            PushbackReader reader = null;
             try {
-                inputStream = new FileInputStream(loadFile.getSelectedFile());
-                int read = inputStream.read();
-                doc.insertString(0, "", null);
-                while (read != -1) {
-                    list.add(read);// tambahkan 1 baris
-                    doc.insertString(doc.getLength(), "" + read, null);
-                    System.out.println("" + read);
-                    read = inputStream.read();
-                    }
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(Praktikum2Controller.class.getName()).log(Level.SEVERE, null, ex);
+                File selectedFile = loadFile.getSelectedFile();
+                reader = new PushbackReader(new InputStreamReader(new FileInputStream(selectedFile), "UTF-8"));
+                StringBuilder contentBuilder = new StringBuilder();
+                int charCount = 0;
+                int wordCount = 0;
+                int lineCount = 0;
+    
+                char[] buffer = new char[1024];
+                int numRead;
+                while ((numRead = reader.read(buffer)) != -1) {
+                    String chunk = new String(buffer, 0, numRead);
+                    contentBuilder.append(chunk);
+                    charCount += chunk.length();
+                }
+    
+                String content = contentBuilder.toString();
+                String[] lines = content.split("\r?\n");
+                lineCount = lines.length;
+                for (String line : lines) {
+                    wordCount += line.trim().isEmpty() ? 0 : line.trim().split("\\s+").length;
+                }
+    
+                // Tampilkan konten ke JTextPane
+                doc.remove(0, doc.getLength());
+                doc.insertString(0, content, null);
+    
+                // Tambahkan statistik ke bagian akhir teks
+                doc.insertString(doc.getLength(), 
+                    "\n\n==== Statistik File ====\n" +
+                    "Jumlah Baris    : " + lineCount + "\n" +
+                    "Jumlah Kata     : " + wordCount + "\n" +
+                    "Jumlah Karakter : " + charCount + "\n", null);
+    
             } catch (IOException | BadLocationException ex) {
                 Logger.getLogger(Praktikum2Controller.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
-                if (inputStream != null) {
+                if (reader != null) {
                     try {
-                        inputStream.close();
+                        reader.close();
                     } catch (IOException ex) {
                         Logger.getLogger(Praktikum2Controller.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                     }
                 }
             }
         }
     }
+    
 
     private void save() {
         JFileChooser loadFile = view.getLoadFile();
