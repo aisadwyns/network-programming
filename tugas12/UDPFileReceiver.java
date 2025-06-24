@@ -25,5 +25,6 @@ public class UDPFileReceiver {
         fos.close();
         socket.close();
         System.out.println("File berhasil diterima dan disimpan.");
+        
     }
 }
